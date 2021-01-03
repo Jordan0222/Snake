@@ -6,6 +6,9 @@ import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -14,10 +17,26 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
+        val snakeViewModel = ViewModelProvider(this).get(SnakeViewModel::class.java)
+        snakeViewModel.body.observe(this, Observer {
+            main_game_view.snakeBody = it
+            main_game_view.invalidate()
+        })
+
+        snakeViewModel.apple.observe(this, Observer {
+
+        })
+
+        snakeViewModel.score.observe(this, Observer {
+
+        })
+
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
         }
+
+        snakeViewModel.start()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
