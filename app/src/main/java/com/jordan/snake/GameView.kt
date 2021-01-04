@@ -13,7 +13,7 @@ class GameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
     var apple: Position? = null
     var size = 0
     val gap = 3
-    private val paint = Paint().apply { color = Color.BLACK }
+    private val paint = Paint().apply { color = Color.BLUE }
     private val paintApple = Paint().apply { color = Color.RED }
 
     override fun onDraw(canvas: Canvas?) {

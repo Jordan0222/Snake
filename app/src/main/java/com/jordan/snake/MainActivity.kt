@@ -9,16 +9,19 @@ import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var snakeViewModel: SnakeViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
-        val snakeViewModel = ViewModelProvider(this).get(SnakeViewModel::class.java)
+        snakeViewModel = ViewModelProvider(this).get(SnakeViewModel::class.java)
         snakeViewModel.body.observe(this, Observer {
             main_game_view.snakeBody = it
             main_game_view.invalidate()
@@ -40,12 +43,11 @@ class MainActivity : AppCompatActivity() {
         })
 
         snakeViewModel.score.observe(this, Observer {
-
+            main_score.text = it.toString()
         })
 
-        findViewById<FloatingActionButton>(R.id.fab).setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+       fab.setOnClickListener { view ->
+            replay()
         }
 
         snakeViewModel.start()
@@ -54,6 +56,17 @@ class MainActivity : AppCompatActivity() {
         main_left.setOnClickListener { snakeViewModel.move(Direction.LEFT) }
         main_right.setOnClickListener { snakeViewModel.move(Direction.RIGHT) }
         main_down.setOnClickListener { snakeViewModel.move(Direction.DOWN) }
+    }
+
+    private fun replay() {
+        AlertDialog.Builder(this)
+                .setTitle("Replay")
+                .setMessage("Are you sure?")
+                .setPositiveButton("OK") { dialog, which ->
+                    snakeViewModel.reset()
+                }
+                .setNeutralButton("Cancel", null)
+                .show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
