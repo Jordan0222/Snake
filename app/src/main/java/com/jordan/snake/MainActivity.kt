@@ -6,6 +6,7 @@ import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.content_main.*
@@ -23,8 +24,19 @@ class MainActivity : AppCompatActivity() {
             main_game_view.invalidate()
         })
 
-        snakeViewModel.apple.observe(this, Observer {
+        snakeViewModel.gameState.observe(this, Observer {
+            if (it == GameState.GAME_OVER) {
+                AlertDialog.Builder(this@MainActivity)
+                        .setTitle("Game")
+                        .setMessage("Game Over")
+                        .setPositiveButton("OK", null)
+                        .show()
+            }
+        })
 
+        snakeViewModel.apple.observe(this, Observer {
+            main_game_view.apple = it
+            main_game_view.invalidate()
         })
 
         snakeViewModel.score.observe(this, Observer {
@@ -37,6 +49,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         snakeViewModel.start()
+
+        main_top.setOnClickListener { snakeViewModel.move(Direction.TOP) }
+        main_left.setOnClickListener { snakeViewModel.move(Direction.LEFT) }
+        main_right.setOnClickListener { snakeViewModel.move(Direction.RIGHT) }
+        main_down.setOnClickListener { snakeViewModel.move(Direction.DOWN) }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

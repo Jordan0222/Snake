@@ -10,13 +10,19 @@ import android.view.View
 class GameView(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     var snakeBody: List<Position>? = null
+    var apple: Position? = null
     var size = 0
     val gap = 3
     private val paint = Paint().apply { color = Color.BLACK }
+    private val paintApple = Paint().apply { color = Color.RED }
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         canvas?.run {
+            apple?.run {
+                drawRect((x*size).toFloat() + gap, (y*size).toFloat() + gap,
+                ((x+1)*size).toFloat() - gap, ((y+1)*size).toFloat() - gap, paintApple)
+            }
             snakeBody?.forEach {
                 drawRect((it.x*size).toFloat() + gap, (it.y*size).toFloat() + gap,
                     ((it.x+1)*size).toFloat() - gap, ((it.y+1)*size).toFloat() - gap, paint)
